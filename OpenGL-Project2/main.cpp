@@ -1,6 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "./lib/glad/glad.h"
-#include "./lib/stb_image.h"
+
+#include "libraries/glad.h"
+#include "libraries/stb_image.h"
+#include "MyShaderLoader.h"
+#include "MyCamera.h"
 
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -10,43 +13,23 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1200;
 
-// ========================================
-// GLSL (OpenGL Shading Language)
-// Modern OpenGL requires that we at least set up a vertex and fragment
-// shader if we want to do some rendering
-const char *vertexShaderSource =
-            	"#version 330 core\n"
-            	"layout (location = 0) in vec3 aPos;\n"
-	"layout (location = 1) in vec2 aTexCoord;\n"
-            	"out vec2 TexCoord;\n"
-	"uniform mat4 model;\n"
-	"uniform mat4 view;\n"
-	"uniform mat4 projection;\n"
+// camera
+Camera camera(glm::vec3(0.7f, -5.0f, 20.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
 
-            	"void main()\n"
-            	"{\n"
-	"gl_Position = projection * view * model * vec4(aPos, 1.0f);\n"
-	"TexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);\n"
-            	"}\0";
-
-// Fragment shader
-// The fragment shader is all about calculating the color output of your pixels.
-const char *fragmentShaderSource =
-            	"#version 330 core\n"
-            	"out vec4 FragColor;\n"
-            	"in vec2 TexCoord;\n"
-            	"uniform sampler2D ourTexture;\n"
-            	"void main()\n"
-            	"{\n"
-            	"   FragColor = texture(ourTexture, TexCoord);\n"
-            	"}\n\0";
-// ========================================
+// timing
+float deltaTime = 0.0f;    // time between current frame and last frame
+float lastFrame = 0.0f;
 
 int main()
 {
@@ -70,8 +53,13 @@ int main()
     	glfwTerminate();
     	return -1;
 	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+    
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -84,48 +72,10 @@ int main()
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
-
-	// build and compile our shader program
-    	// ------------------------------------
-    	// vertex shader
-    	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    	glCompileShader(vertexShader);
-    	// check for shader compile errors
-    	int success;
-    	char infoLog[512];
-    	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    	if (!success)
-    	{
-            	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-            	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    	}
-    	// fragment shader
-    	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    	glCompileShader(fragmentShader);
-    	// check for shader compile errors
-    	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    	if (!success)
-    	{
-            	glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-            	std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    	}
-
-    	// link shaders
-    	// A shader program object is the final linked version of multiple shaders combined.
-    	int shaderProgram = glCreateProgram();
-    	glAttachShader(shaderProgram, vertexShader);
-    	glAttachShader(shaderProgram, fragmentShader);
-    	glLinkProgram(shaderProgram);
-    	// check for linking errors
-    	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    	if (!success) {
-            	glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            	std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    	}
-    	glDeleteShader(vertexShader);
-    	glDeleteShader(fragmentShader);
+    
+    // build and compile our shader program
+    // ------------------------------------
+    Shader ourShader("shader.vs", "shader.fs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -175,7 +125,8 @@ int main()
 
  // world space positions of our cubes
  glm::vec3 cubePositions[385];
- float starting_x=-5.0f, starting_y=-4.0f, starting_z=-20.0f;
+// float starting_x=-5.0f, starting_y=-4.0f, starting_z=-20.0f;
+float starting_x=-3.8f, starting_y=-8.8f, starting_z=-4.0f;
  int index = 0;
  float n = 10.0f;
  for(float y=starting_y;y<10.0f;y=y+1.0f){
@@ -189,7 +140,8 @@ int main()
      	starting_z=starting_z+0.5;
      	n--;
  }
- cubePositions[384]=glm::vec3(starting_x-2.5f,starting_y+9.0f,starting_z-2.5f);
+// cubePositions[384]=glm::vec3(starting_x-2.5f,starting_y+10.0f,starting_z-2.5f);
+    cubePositions[384]=glm::vec3(0.6f,0.6f,0.6f);
 
 	unsigned int VBO, VAO;
 	glGenVertexArrays(1, &VAO);
@@ -230,13 +182,20 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	stbi_image_free(data);
 
+    ourShader.use();
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
-    	// input
-    	// -----
-    	processInput(window);
+        // per-frame time logic
+        // --------------------
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
+        // input
+        // -----
+        processInput(window);
 
     	// render
     	// ------
@@ -246,21 +205,12 @@ int main()
     	// bind Texture
     	glBindTexture(GL_TEXTURE_2D, texture);
 
-    	// render container
-    	glUseProgram(shaderProgram);
-    	glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, texture);
-    	glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
+        // activate shader
+        ourShader.use();
 
-     	// create transformations
-    	glm::mat4 view      	= glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    	glm::mat4 projection	= glm::mat4(1.0f);
-    	projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    	view   	= glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    	// pass transformation matrices to the shader
-    	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, &projection[0][0]);
-    	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"),1,GL_FALSE, &view[0][0]);
-
+        glm::mat4 view          = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        glm::mat4 projection    = glm::mat4(1.0f);
+        
     	// render boxes
     	glBindVertexArray(VAO);
     	for(unsigned int i=0;i < 384; i++)
@@ -268,18 +218,25 @@ int main()
         	// calculate the model matrix for each object and pass it to shader before drawing
         	glm::mat4 model = glm::mat4(1.0f);
         	model = glm::translate(model, cubePositions[i]);
-        	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, &model[0][0]);
-
+            ourShader.setMat4("model",model);
         	glDrawArrays(GL_TRIANGLES, 0, 36);
     	}
     	// highest cube
-    	glm::mat4 model = glm::mat4(1.0f);
-    	model = glm::translate(model, cubePositions[384]);
-    	float angle = 45.0f;//20.0f * i;
-    	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-    	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, &model[0][0]);
-    	glDrawArrays(GL_TRIANGLES, 0, 36);
-
+        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        model = glm::translate(model, cubePositions[384]);
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
+        view = camera.GetViewMatrix();
+        projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        
+        // retrieve the matrix uniform locations
+        unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
+        unsigned int viewLoc  = glGetUniformLocation(ourShader.ID, "view");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        ourShader.setMat4("projection", projection);
+        
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
     	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     	// -------------------------------------------------------------------------------
@@ -304,6 +261,18 @@ void processInput(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     	glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -313,4 +282,31 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
+}
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    
+    lastX = xpos;
+    lastY = ypos;
+    
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(yoffset);
 }
