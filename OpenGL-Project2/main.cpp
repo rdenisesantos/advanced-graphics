@@ -21,7 +21,7 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1200;
 
 // camera
-Camera camera(glm::vec3(0.3f, -5.0f, 20.0f));
+Camera camera(glm::vec3(4.0f, 3.5f, 23.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -65,6 +65,9 @@ int main()
     	std::cout << "Failed to initialize GLAD" << std::endl;
     	return -1;
 	}
+    
+    // configure global opengl state
+    // -----------------------------
 	glEnable(GL_DEPTH_TEST);
     
     // build and compile our shader program
@@ -118,22 +121,23 @@ int main()
 	};
 
     // dynamically set cube positions (to generate the pyramid -- excluding the very top cube)
+    // starting from the bottom of the pyramid (10x10)
     glm::vec3 cubePositions[385];
-    float starting_x=-4.4f, starting_y=-9.05f, starting_z=-4.4f;
-    int index = 0;
-    float n = 10.0f;
-    for(float y=starting_y;y<10.0f;y=y+1.0f){
-        for(float z=starting_z; z<(starting_z+n);z=z+1.0f){
-                for(float x=starting_x; x<(starting_x+n);x=x+1.0f){
+    float starting_x=0.0f, starting_y=0.0f, starting_z=0.0f; // starting position
+    int index = 0; // index of cubePositions[]
+    float n = 10.0f; // number of cubes per column or row in each level (nxn)
+    for(float y=starting_y;y<10.0f;y++){
+        for(float z=starting_z; z<(starting_z+n);z++){
+            for(float x=starting_x; x<(starting_x+n);x++){
                     cubePositions[index]=glm::vec3(x,y,z);
                     index++;
-             	}
-     	}
-        starting_x=starting_x+0.5;
-        starting_z=starting_z+0.5;
-     	n--;
+            }
+         }
+        starting_x += 0.5;
+        starting_z += 0.5;
+         n--;
     }
-    cubePositions[384]=glm::vec3(0.0f,0.0f,0.0f); // top cube
+    cubePositions[384]=glm::vec3(7.3f, 15.05f, 7.5f); // top cube position
 
 	unsigned int VBO, VAO;
 	glGenVertexArrays(1, &VAO);
@@ -147,7 +151,7 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
     
-	// color attribute
+	// texCoord attribute
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
@@ -205,28 +209,29 @@ int main()
         
     	// render boxes
     	glBindVertexArray(VAO);
-    	for(unsigned int i=0;i < 384; i++){
-        	// calculate the model matrix for each object and pass it to shader before drawing
-        	glm::mat4 model = glm::mat4(1.0f);
-        	model = glm::translate(model, cubePositions[i]);
+        for(unsigned int i=0;i < 384; i++){
+            // calculate the model matrix for each object and pass it to shader before drawing
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
             ourShader.setMat4("model",model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-    	}
-    	// highest cube
+        }
+
+    	// top cube
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f)); // top cube scaled down
         model = glm::translate(model, cubePositions[384]); // top cube's position
         model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
         view = camera.GetViewMatrix();
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        
+
         // retrieve the matrix uniform locations
         unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
         unsigned int viewLoc  = glGetUniformLocation(ourShader.ID, "view");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         ourShader.setMat4("projection", projection);
-        
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
