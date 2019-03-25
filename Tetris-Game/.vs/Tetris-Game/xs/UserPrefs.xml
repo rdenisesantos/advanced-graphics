@@ -1,0 +1,25 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MenuManager.cs">
+    <Files>
+      <File FileName="Assets/Scripts/GameMaster.cs" Line="5" Column="22" />
+      <File FileName="Assets/Scripts/GridManager.cs" Line="86" Column="87" />
+      <File FileName="Assets/Scripts/I.cs" Line="29" Column="9" />
+      <File FileName="Assets/Scripts/ITetromino.cs" Line="6" Column="2" />
+      <File FileName="Assets/Scripts/J.cs" Line="105" Column="10" />
+      <File FileName="Assets/Scripts/L.cs" Line="105" Column="10" />
+      <File FileName="Assets/Scripts/O.cs" Line="105" Column="10" />
+      <File FileName="Assets/Scripts/S.cs" Line="30" Column="10" />
+      <File FileName="Assets/Scripts/T.cs" Line="105" Column="10" />
+      <File FileName="Assets/Scripts/Z.cs" Line="112" Column="10" />
+      <File FileName="Assets/Scripts/Tetromino.cs" Line="18" Column="31" />
+      <File FileName="Assets/Scripts/MenuManager.cs" Line="31" Column="4" />
+      <File FileName="Assets/Scripts/StartGame.cs" Line="12" Column="6" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
