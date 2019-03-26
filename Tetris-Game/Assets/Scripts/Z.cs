@@ -32,14 +32,9 @@ public class Z : Tetromino, ITetromino
             {
                 //if (allowedRotation)
                 //{
-                if (transform.rotation.eulerAngles.z < 90)
-                {
-                    transform.Rotate(0, 0, -90);
-                }
-                else
-                {
+              
                     transform.Rotate(0, 0, 90);
-                }
+
                 if (IsAValidPosition())
                 {
                     FindObjectOfType<GridManager>().UpdateGrid(this);

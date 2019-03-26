@@ -9,6 +9,7 @@ public class GameMaster : MonoBehaviour
     public AudioSource audioSource;
     public Canvas gameInfo;
     public Canvas pauseScreen;
+    public Canvas mainMenu; 
     public GameObject[] TetriminoPrefabs;
     public GameObject CurrentTetrominoFalling = null;
     public GameObject NextTetromino = null;
@@ -40,7 +41,6 @@ public class GameMaster : MonoBehaviour
 
     // lines to be cleared to get to the next level
     // for simplicity, it will be twice as much each level
-    //public int goal = 3;
 
     // lines cleared since the game started
     public Text ui_lines_cleared;
@@ -56,6 +56,7 @@ public class GameMaster : MonoBehaviour
         UpdateLevel();
         UpdateSpeed();
         CheckIfPauseIsRequested();
+        CheckIfMenuIsRequested();
     }
 
     public void UpdateUI() {
@@ -85,9 +86,30 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    void CheckIfMenuIsRequested()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (Time.timeScale == 1)
+            {
+                Time.timeScale = 0;
+                isPaused = true;
+                gameInfo.enabled = false;
+                mainMenu.enabled = true;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                isPaused = false;
+                gameInfo.enabled = true;
+                mainMenu.enabled = false;
+            }
+        }
+    }
+
     // spawns new tetrominos on top of the board and previews the upcoming tetromino
     public void SpawnNewTetromino() {
-            if (CurrentTetrominoFalling == null && NextTetromino == null)
+        if (CurrentTetrominoFalling == null && NextTetromino == null)
             { // new game
                 CurrentTetrominoFalling = GameObject.Instantiate
                                           (TetriminoPrefabs[Random.Range(0, TetriminoPrefabs.Length)],
@@ -96,7 +118,7 @@ public class GameMaster : MonoBehaviour
 
                 NextTetromino = GameObject.Instantiate
                                 (TetriminoPrefabs[Random.Range(0, TetriminoPrefabs.Length)],
-                                new Vector3(18, 7, 0),
+                                new Vector3(17, 7, 0),
                                 Quaternion.identity) as GameObject;
 
                 // prevents the next tetromino from moving/rotating while the
@@ -115,7 +137,7 @@ public class GameMaster : MonoBehaviour
                 // next tetromino being previewed
                 NextTetromino = GameObject.Instantiate
                                 (TetriminoPrefabs[Random.Range(0, TetriminoPrefabs.Length)],
-                                new Vector3(18, 7, 0),
+                                new Vector3(17, 7, 0),
                                 Quaternion.identity) as GameObject;
 
                 NextTetromino.GetComponent<Tetromino>().enabled = false;
