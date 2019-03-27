@@ -24,7 +24,7 @@ public class GameMaster : MonoBehaviour
     // fourLines = 800... and so forth
 
     public Text ui_score;
-    public static int currentScore ;
+    public static int currentScore;
 
     // score multipliers
     public int oneLine = 20;
@@ -116,7 +116,7 @@ public class GameMaster : MonoBehaviour
 
                 NextTetromino = GameObject.Instantiate
                                 (TetriminoPrefabs[Random.Range(0, TetriminoPrefabs.Length)],
-                                new Vector3(17, 7, 0),
+                                new Vector3(17, 9, 0),
                                 Quaternion.identity) as GameObject;
 
                 // prevents the next tetromino from moving/rotating while the
@@ -135,7 +135,7 @@ public class GameMaster : MonoBehaviour
                 // next tetromino being previewed
                 NextTetromino = GameObject.Instantiate
                                 (TetriminoPrefabs[Random.Range(0, TetriminoPrefabs.Length)],
-                                new Vector3(17, 7, 0),
+                                new Vector3(17, 9, 0),
                                 Quaternion.identity) as GameObject;
 
                 NextTetromino.GetComponent<Tetromino>().enabled = false;

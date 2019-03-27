@@ -1,12 +1,13 @@
 ﻿<Properties StartupConfiguration="{03F4282F-F6BF-F43E-48A7-69EE8EC07548}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Tetromino.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/UIManager.cs">
     <Files>
       <File FileName="Assets/Scripts/I.cs" Line="100" Column="45" />
       <File FileName="Assets/Scripts/S.cs" Line="12" Column="6" />
       <File FileName="Assets/Scripts/Z.cs" Line="9" Column="25" />
       <File FileName="Assets/Scripts/GameMaster.cs" Line="23" Column="50" />
       <File FileName="Assets/Scripts/GridManager.cs" Line="109" Column="21" />
-      <File FileName="Assets/Scripts/Tetromino.cs" Line="19" Column="1" />
+      <File FileName="Assets/Scripts/Tetromino.cs" Line="13" Column="1" />
+      <File FileName="Assets/Scripts/UIManager.cs" Line="74" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,7 +15,7 @@
           <Node name="Tetris-Game" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="Tetromino.cs" selected="True" />
+                <Node name="UIManager.cs" selected="True" />
               </Node>
             </Node>
           </Node>
