@@ -11,12 +11,6 @@ public class Tetromino : MonoBehaviour
 {
     public TetrominoType Type;
 
-    // [Tooltip("Used for translation")]
-    // public GameObject Root;
-
-    //[Tooltip("Used for rotation")]
-    //public GameObject Pivot;
-
     [SerializeField]
     protected GameObject[] cubes = new GameObject[4];
 

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// limited rotation
 public class I : Tetromino, ITetromino
 {
-    //public bool allowedRotation = true; // only the O tetrimino shouldn't be allowed to rotate
     float lastFallTime = 0;
     private float speed;
+
 
     TetrominoType ITetromino.GetType()
     {
@@ -25,41 +26,30 @@ public class I : Tetromino, ITetromino
     }
 
     void Update()
-    { // keyboard bindings
+    {   // keyboard bindings
         if (!GameMaster.isPaused)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                //if (allowedRotation)
-                //{
-
-                    transform.Rotate(0, 0, 90);
-
-                if (IsAValidPosition())
-                {
-                    FindObjectOfType<GridManager>().UpdateGrid(this);
-                }
-                else
-                {
+                if(transform.rotation.eulerAngles.z >= 90) {
                     transform.Rotate(0, 0, -90);
                 }
-                //}
+                else {
+                    transform.Rotate(0, 0, 90);
+                }
+
+                if (IsAValidPosition()){    
+                    FindObjectOfType<GridManager>().UpdateGrid(this);
+                }
+                else{
+                    if(transform.rotation.eulerAngles.z >= 90) {
+                        transform.Rotate(0, 0, -90);
+                    }
+                    else {
+                        transform.Rotate(0, 0, 90);
+                    }
+                }
             }
-            //if (Input.GetKeyDown(KeyCode.DownArrow))
-            //{
-            //    if (allowedRotation)
-            //    {
-            //        transform.Rotate(0, 0, -90);
-            //        if (IsAValidPosition())
-            //        {
-            //            FindObjectOfType<GridManager>().UpdateGrid(this);
-            //        }
-            //        else
-            //        {
-            //            transform.Rotate(0, 0, 90);
-            //        }
-            //    }
-            //}
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 transform.position += new Vector3(-1, 0, 0);
@@ -107,6 +97,7 @@ public class I : Tetromino, ITetromino
         }
     }
 
+    // checks if the tetromino is within boundaries
     public bool IsAValidPosition()
     {
         foreach (Transform cube in transform)

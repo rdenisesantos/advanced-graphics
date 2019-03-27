@@ -25,13 +25,11 @@ public class J : Tetromino, ITetromino
     }
 
     void Update()
-    { // keyboard bindings
+    {   // keyboard bindings
         if (!GameMaster.isPaused)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                //if (allowedRotation)
-                //{
                 transform.Rotate(0, 0, 90);
                 if (IsAValidPosition())
                 {
@@ -41,12 +39,9 @@ public class J : Tetromino, ITetromino
                 {
                     transform.Rotate(0, 0, -90);
                 }
-                //}
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                //if (allowedRotation)
-                //{
+            {        
                 transform.Rotate(0, 0, -90);
                 if (IsAValidPosition())
                 {
@@ -56,7 +51,6 @@ public class J : Tetromino, ITetromino
                 {
                     transform.Rotate(0, 0, 90);
                 }
-                //}
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
@@ -105,6 +99,7 @@ public class J : Tetromino, ITetromino
         }
     }
 
+    // checks if the tetromino is within boundaries
     public bool IsAValidPosition()
     {
         foreach (Transform cube in transform)

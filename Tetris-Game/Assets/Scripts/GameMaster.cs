@@ -66,8 +66,9 @@ public class GameMaster : MonoBehaviour
     }
 
     //----------------------HELPER METHODS -------------------------------//
-    void CheckIfPauseIsRequested()
-    {
+
+    // When the key "P" is pressed, it invokes a pause in game
+    void CheckIfPauseIsRequested(){
         if (Input.GetKeyUp(KeyCode.P)) { 
             if(Time.timeScale == 1) {
                 Time.timeScale = 0;
@@ -86,19 +87,16 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-    void CheckIfMenuIsRequested()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            if (Time.timeScale == 1)
-            {
+    // When the key "ESC" is pressed, it brings up the options menu
+    void CheckIfMenuIsRequested(){
+        if (Input.GetKeyUp(KeyCode.Escape)){
+            if (Time.timeScale == 1){
                 Time.timeScale = 0;
                 isPaused = true;
                 gameInfo.enabled = false;
                 mainMenu.enabled = true;
             }
-            else
-            {
+            else{
                 Time.timeScale = 1;
                 isPaused = false;
                 gameInfo.enabled = true;
