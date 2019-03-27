@@ -1,4 +1,13 @@
-﻿using System.Collections;
+﻿/*
+    Programmer: Rose Denise Santos
+    COMP SCI 565 - Advanced Graphics 
+    TETR!S GAME
+    GameMaster : Manages scores, levels and modifies level difficulty by increasing the falling speed
+                 It also manages the spawning of the tetrominos and detects any screen interrupts,
+                 such as pauses or viewing the option menu.            
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;

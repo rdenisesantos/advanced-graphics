@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿/*
+    Programmer: Rose Denise Santos
+    COMP SCI 565 - Advanced Graphics 
+    TETR!S GAME
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

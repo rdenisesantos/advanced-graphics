@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+    Programmer: Rose Denise Santos
+    COMP SCI 565 - Advanced Graphics 
+    TETR!S GAME
+    GridManager : Manages the positions in the grid. It checks to see if there are any
+                  full lines and deletes them accordingly. It also provides boundary-checking.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

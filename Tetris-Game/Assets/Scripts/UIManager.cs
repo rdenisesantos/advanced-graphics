@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+    Programmer: Rose Denise Santos
+    COMP SCI 565 - Advanced Graphics 
+    TETR!S GAME
+    UIManager : Manages all UI components such as buttons, toggles and sliders. 
+                Updates UI displays such as scores, level and lines cleared after the game has ended.  
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
