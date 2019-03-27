@@ -1,6 +1,6 @@
 OSXUniversal
 PlayerPath?
-/Users/denise/Desktop/Tetris-Game.app
+/Users/denise/Documents/GitHub/advanced-graphics/Tetris-Game/Tetris-Game.app
 SceneListBegin?
 Assets/Scenes/StartUpMenu.unity
 Assets/Scenes/Game.unity
