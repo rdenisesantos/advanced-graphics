@@ -68,7 +68,6 @@
     <Compile Include="Assets\Scripts\L.cs" />
     <Compile Include="Assets\Scripts\O.cs" />
     <Compile Include="Assets\Scripts\S.cs" />
-    <Compile Include="Assets\Scripts\StartMenuManager.cs" />
     <Compile Include="Assets\Scripts\T.cs" />
     <Compile Include="Assets\Scripts\Tetromino.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />

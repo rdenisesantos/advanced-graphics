@@ -258,7 +258,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1556251400}
-        m_MethodName: NewGame
+        m_MethodName: PlayAgain
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5354,9 +5354,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1556251399}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25b9789b058ae42c9b91615434657165, type: 3}
+  m_Script: {fileID: 11500000, guid: 24dafb89dc19441c5b6a69cdcbbcb40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ui_total_score: {fileID: 0}
+  ui_last_level: {fileID: 0}
+  ui_total_lines_cleared: {fileID: 0}
+  musicToggle: {fileID: 0}
+  Volume: {fileID: 0}
 --- !u!4 &1556251401
 Transform:
   m_ObjectHideFlags: 0

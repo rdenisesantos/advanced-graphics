@@ -1,6 +1,6 @@
 OSXUniversal
 PlayerPath?
-/Users/denise/Desktop/tetris-v0.app
+/Users/denise/Desktop/Tetris-Game.app
 SceneListBegin?
 Assets/Scenes/StartUpMenu.unity
 Assets/Scenes/Game.unity
@@ -156,7 +156,6 @@ fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 fb6a1ea36b4f6ef5948d283d93760765 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 5b0391b7e3d9ea9db6c0a8fbd0ca23f6 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.StartMenuManager
 a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 9ac3601a9d2b6fcffd50bba1bfc36523 Assembly-CSharp.dll:.Tetromino
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
